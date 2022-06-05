@@ -38,7 +38,7 @@ class Emojimon:
     # Evolutionary stats for xp requirement for level up
     xp_mult = 1.5  # This will mean xp_remaining will increase by 1.5 every single level up
 
-    def __init__(self, random: bool, data: str = ''):
+    def __init__(self, random: bool, id: int):
         """
         Constructor
         Parameter:
@@ -46,9 +46,23 @@ class Emojimon:
                 Needs to be here since Python does not allow for constructor overloading
             data (str): a json object that will be converted back into an emojimon
         """
-        if not data and not random:
+        if not id and not random:
             raise ValueError(
                 'If random is set to false, data must be a non-empty json string')
+
+        if random:
+            self.random_gen()
+            self._id = id
+            self.evolve_to += 1
+        else:
+            pass
+
+    def fetch_emojimon(self, id: int):
+        """
+        Fetch emojimon object from the database, for now it will be a local json document
+        Parameter: 
+            id (int): emojidex id of the emoji
+        """
         pass
 
     def random_gen(self):
