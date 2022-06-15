@@ -1,0 +1,9 @@
+{
+  "fire": ["fire", "fiery", "blazing", "burning", "incendiary", "flaming"],
+  "water": ["water", "flooding", "drowning", "tsunamic", "aqua", "steaming"],
+  "air": ["air", "suffocating", "aerobic", "airborne", "aerial", "breezing", "stagnating", "rotten"],
+  "earth": ["earthen", "terran", "stony", "meteoric", "rock"],
+  "ice": ["icey", "freezing", "glacial", "frosty"],
+  "nouns": ["gashes", "waltz", "turbulence", "assault", "fist", "prick", "kick", "stiletto", "slash"],
+  "str_adj": ["violent", "powerful", "upgraded", "strong", "fervid"]
+}
