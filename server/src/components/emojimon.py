@@ -1,4 +1,6 @@
+import json
 import random
+import copy
 
 
 class Emojimon:
@@ -111,3 +113,33 @@ class Emojimon:
 
     def evolve_handler(self):
         pass
+
+    def json_encoder(self):
+        """
+        Handles emcoding and loading the state of the emojimon into a JSON file
+        """
+        # Shallow copy.
+        data = copy.copy(self.__dict__)
+        data = self.__rec_data_extraction(data)
+        with open(f"{self._id}.json") as f:
+            json.dump(data, f)
+
+    def __rec_data_extraction(self, data: dict):
+        """
+        Recursively extract the data of the emojimon along with any objects belonging to the emojimon object
+        Parameters:
+                data (dict): the __dict__ attribute of the object, specifically the Emojimon or the objects related to
+                it.
+        """
+        for key in data.keys():
+            # Not sure if this is a shallow copy or just a reference value to the one in the dict
+            val = data[key]
+            if hasattr(val, '__dict__'):
+                data[key] = self.__rec_data_extraction(val.__dict__)
+            elif type(val) == list:
+                # valid since both val and data[key] points to the list, and we change the elements in the list.
+                for i in range(len(val)):
+                    if hasattr(val[i], '__dict__'):
+                        val[i] = self.__rec_data_extraction(val[i].__dict__)
+        # climbing_up part
+        return data
