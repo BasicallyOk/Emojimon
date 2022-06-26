@@ -120,11 +120,11 @@ class Emojimon:
         """
         # Shallow copy.
         data = copy.copy(self.__dict__)
-        data = self.__rec_data_extraction(data)
+        data = self.__rec_data_extr(data)
         with open(f"{self._id}.json") as f:
             json.dump(data, f)
 
-    def __rec_data_extraction(self, data: dict):
+    def __rec_data_extr(self, data: dict):
         """
         Recursively extract the data of the emojimon along with any objects belonging to the emojimon object
         Parameters:
@@ -132,14 +132,30 @@ class Emojimon:
                 it.
         """
         for key in data.keys():
-            # Not sure if this is a shallow copy or just a reference value to the one in the dict
             val = data[key]
             if hasattr(val, '__dict__'):
-                data[key] = self.__rec_data_extraction(val.__dict__)
-            elif type(val) == list:
-                # valid since both val and data[key] points to the list, and we change the elements in the list.
-                for i in range(len(val)):
-                    if hasattr(val[i], '__dict__'):
-                        val[i] = self.__rec_data_extraction(val[i].__dict__)
-        # climbing_up part
+                data[key] = self.__rec_data_extr(val.__dict__)
+            elif isinstance(val, list):
+                # valid since both val and data[key] points to the list, and we change the elements in the list that
+                # those two variables point to.
+                data[key] = self.__rec_list_data_extr(val)
+            # If we need to check for the possibility of an attribute referring to a dictionary then a
+            # a conditional check like for the list should be sufficient.
+        # The climbing_up part.
         return data
+
+    def __rec_list_data_extr(self, lst: list):
+        """
+            Recursively traverse lists of arbitrary depth, and extract any __dict__ attribute of objects inside that
+            have it. This is a helper method for the __rec_data_extr() method.
+            Parameters:
+                lst (list): a list of arbitrary depth.
+        """
+        for i in range(len(lst)):
+            if isinstance(lst[i], list):
+                lst[i] = self.__rec_list_data_extr(lst[i])
+            elif hasattr(lst[i], '__dict__'):
+                # Extract and encode the attributes of the object having __dict__ as usual.
+                lst[i] = self.__rec_data_extr(lst[i].__dict__)
+        return lst
+
