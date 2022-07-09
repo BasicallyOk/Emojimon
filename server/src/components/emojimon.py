@@ -1,4 +1,7 @@
+import json
 import random
+import copy
+import utils
 
 
 class Emojimon:
@@ -111,3 +114,9 @@ class Emojimon:
 
     def evolve_handler(self):
         pass
+
+    def get_id(self):
+        """
+        Getter method for returning the id of the Emojimon object.
+        """
+        return self._id
