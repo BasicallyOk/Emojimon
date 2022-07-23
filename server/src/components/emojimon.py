@@ -120,3 +120,13 @@ class Emojimon:
         Getter method for returning the id of the Emojimon object.
         """
         return self._id
+    
+    def convert_python(self, json_file):
+        """
+        converts json objects to python objects
+        """
+        
+        data= json.load(open(json_file, "rt"))
+        
+        for key in data:
+            self.__dict__[key] = data[key]
