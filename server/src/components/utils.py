@@ -63,8 +63,20 @@ class Utils:
   def write_to_db(db_name, data):
     """
     Writes data to a database.
-    Parameters:
-      db_name (str): the name of the database.
-      data (dict): the data to be written to the database.
+
+    Keyword arguments:
+      db_name (str) -- the name of the database.
+      data (dict) -- the data to be written to the database.
+    """
+    pass
+
+  
+  def fetch_from_db(db_name, id):
+    """
+    Fetches data from a database.
+
+    Keyword arguments:
+      db_name (str) -- the name of the database.
+      id (int) -- the id number of the document.
     """
     pass

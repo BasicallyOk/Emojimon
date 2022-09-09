@@ -48,17 +48,18 @@ class Emojimon:
 	# List of moves that is currently being used (locked to 4 moves) (stored by id)
 	move_list = []
 
-	def __init__(self, random: bool, id: int):
+	def __init__(self, random: bool, id: int=None):
 		"""
 		Constructor
-		Parameter:
-			random (bool): whether or not we want to generate this randomly. 
+
+		Keyword Arguments:
+			random (bool) -- whether or not we want to generate this randomly. 
 				Needs to be here since Python does not allow for constructor overloading
-			data (str): a json object that will be converted back into an emojimon
+			data (str) -- a json object that will be converted back into an emojimon
 		"""
 		if not id and not random:
 			raise ValueError(
-				'If random is set to false, data must be a non-empty json string')
+				'Emojimon constructor requires that if random is set to false, id must be an integer')
 
 		if random:
 			self.random_gen()
@@ -70,8 +71,8 @@ class Emojimon:
 	def fetch_emojimon(self, id: int):
 		"""
 		Fetch emojimon object from the database, for now it will be a local json document
-		Parameter: 
-			id (int): emojidex id of the emoji
+		Keyword Arguments: 
+			id (int) -- emojidex id of the emoji
 		"""
 		pass
 
@@ -103,8 +104,8 @@ class Emojimon:
 	def add_xp(self, xp_gained: int):
 		"""
 		Handles adding xp to an emoji, if the emoji receives enough xp it will also level up and potentially evolve
-		Parameter:
-			xp_gained (int): The amount of xp gained by this emojimon
+		Keyword Arguments:
+			xp_gained (int) -- The amount of xp gained by this emojimon
 		"""
 		self.xp_remaining -= xp_gained
 		if self.xp_remaining <= 0:
@@ -129,8 +130,8 @@ class Emojimon:
 		"""
 		Adds a move to the move list of the emojimon
 		Some items can allow you to learn moves that is not part of the move_unlock
-		Parameter:
-			move_id (int): The id of the move to be added
+		Keyword Arguments:
+			move_id (int) -- The id of the move to be added
 		"""
 		self.move_list.append(move_id)
 		if len(self.move_list) > 4:
