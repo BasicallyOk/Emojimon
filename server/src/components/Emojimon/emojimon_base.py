@@ -1,6 +1,7 @@
 """
 Store the default values and level up modifiers so that the Emojimon class
 can either recreate the latest state of a Trainer's Emojimon or create a brand new Emojimon.
+This is the base calculation layer.
 """
 
 # import statements go here
@@ -18,26 +19,7 @@ class EmojimonBase (EmojimonInterface):
 	"""Store the default values and its own default level up modifiers"""
 	# If EmojimonBase is supposed to be the only class whose instances' data are stored on the database,
 	# should id be here instead of in the EmojimonInterface?
-	
-	# Define class attributes 
-	default_stats = {
-		"attack": 1,
-		"special_attack": 1,
-		"defense": 1,
-		"special_defense": 1,
-		"speed": 1,
-		"hp": 1
-		}   # Default stats for the Emojimon. The sum of all of the values of the keys has to be a constant number.
-	level_up_modifiers = {
-		"attack": 1,
-		"special_attack": 1,
-		"defense": 1,
-		"special_defense": 1,
-		"speed": 1,
-		"hp": 1 
-	}       # Default level up modifiers for the Emojimon to apply multiplicatively on the default_stats.
-			# The sum of all the values of the keys has to be a constant number.
-	
+		
 	def __init__(self, id: int, random: bool):
 		"""
 		Initialize the attributes and will either fetch the data of an existing Emojimon or
@@ -72,17 +54,21 @@ class EmojimonBase (EmojimonInterface):
 			val_dict (dict) -- the dictionary with key being strings and values being either an int or float.
 			total (dict) -- the total sum of values the dictionary must have.
 		"""
-		if_decimal = False
 		dict_len = len(val_dict)
-		difference = (total - dict_len)*100
 		keys_list = list(val_dict.keys())
-		# Ensure no bias like the one in Monty Hall Problem.
+		# Ensure no bias like the one in Monty Hall Problem. 
+		# The algorithm used to ensure uniform distribution as much as possible.
+		# It is based on this StackOverflow link:
+		# https://stackoverflow.com/questions/8064629/random-numbers-that-add-to-100-matlab/8068956#8068956
 		random.shuffle(keys_list)
-		for key in keys_list:
-			num = random.randint(0, difference)
-			val_dict[key] += num/100
-			difference -= num
-			
+		if total - dict_len < dict_len:
+			results = [0] + [round(random.uniform(0, total - dict_len), 2) for i in range(dict_len - 1)] + [total - dict_len]
+		else:
+			results = [0] + [random.randint(0, total - dict_len) for i in range(dict_len - 1)] + [total - dict_len] 
+		results.sort()
+		for i in range(1, len(results)):
+			val_dict[list(val_dict.keys())[i-1]] = 1 + results[i] - results[i-1] 
+
 
 	def fetch_emojimon(self):
 		"""
