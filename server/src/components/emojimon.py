@@ -10,7 +10,8 @@ class Emojimon:
 	"""
 	# Elemental type and identification
 	# TODO: make elements a list in database and this be the index instead, keep it consistent
-	el_type = "default"
+	emojiType1 = "Normal"
+	emojiType2 = "Meme"
 	_id = 0  # All emojis should have id higher than 1, this is simply the default
 
 	# Default stat for an emojimon
@@ -161,6 +162,13 @@ class Emojimon:
 		
 		for key in data:
 			self.__dict__[key] = data[key]
+		pass
+	
+ 	#A function that returns a list of the Emoji's one or two types as a list
+	def getEmojiType(self):
+		typeList = [self.emojiType1, self.emojiType2]
+		return typeList
+       
 
 
 def main():

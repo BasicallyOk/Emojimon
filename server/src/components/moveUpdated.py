@@ -1,3 +1,4 @@
+from emojimon import Emojimon
 
 __author__ = "Connor Killingbeck" # Insert your name here if you're writing the initial code
 __maintainer__ = "" # Insert your name here if you're fixing bugs or make improvements
@@ -12,7 +13,7 @@ class Move:
     moveAttackType = ""         #Physical or Emotional
     moveMaxPowerPoints = 0      #Unchanging maximum uses per move
     moveSpeed = 0               #The speed of the move in tandem with the speed of the emoji results in who goes first
-    moveOwner = None            #The emoji that this move belong to
+    moveOwner:Emojimon = None            #The emoji that this move belong to
     moveEffectString = ""       #The String containing the required information for the moves effects.
     
     #Move Elements
@@ -22,12 +23,17 @@ class Move:
     
     
     #Main definition function, makes use of the passed moveID to load correctly.
-    def __init__(self, passedMoveID):
+    def __init__(self, passedMoveID, moveParent):
         #load move attributes from file
+        if(passedMoveID == -1):
+            self.moveType = "Robot"
+            self.moveOwner = moveParent
+            self.moveAttackPower = 100
         pass
     
     #A Simple Function that returns the name of the Move
     def getMoveName(self):
+        ''''''
         return self.moveName
     
     #A Simple Function that returns the moves Identification number
@@ -42,18 +48,25 @@ class Move:
     def getMoveOwnerAsEmojimon(self):
         return self.moveOwner
     
-    #A function that returns True if the move is being used is the same type as the moves user
+    #A function that returns 1.5 if the move is being used is the same type as the moves user, if not, it returns 1
     def determineSameTypeAttackBonus(self):
-        #tempEmoji = getMoveOwnerAsEmojimon()
-        #check if the emoji's type and getMoveType return the same type, if so, return true
-        pass
+        if self.getMoveType == self.moveOwner.getEmojiType[0] or self.getMoveType == self.moveOwner.getEmojiType[1]:
+            return 1.5
+        else:
+            return 1
     
-    #A function that determins the move type multiplier. If the moves type is effective aginst the opponent.
-    def determineTypeEffectivenessMultiplier(self, moveTarget):
-        pass
+    #A function that determines the move type multiplier. If the moves type is effective aginst the opponent.
+    def determineTypeEffectivenessMultiplier(self, moveTarget:Emojimon):
+        defendingTypes = moveTarget.getEmojiType()
+        type1Mod = self.typeEffectivesChart(self.getMoveType(), defendingTypes[0])
+        type2Mod = 1
+        if defendingTypes[1] != "Null":
+            type2Mod = self.typeEffectivesChart(self.getMoveType(), defendingTypes[1])
+        
+        return type1Mod * type2Mod
     
     #The actual function that goes through the chart looking for the desired type
-    def typeEffectivesChart(moveType, defenderType):
+    def typeEffectivesChart(self, moveType, defenderType):
         typeChart = [["Move Type >", "Normal", "Robot", "Ninja", "Fire", "Water", "Dinosaur", "Earth", "Sound", "Wind", "Darkness", "Light", "Plasma", "Solar", "Lunar", "Meme", "Magic"],
                      ["Normal",         "1",       "1",     "1",    "1",    "1",       "2",       "1",    "1",     "1",     "1",        "1",     "2",     "2",     "1",    "1",      "1"],
                      ["Robot",          "0.5",     "1",     "1",  "0.5",    "2",       "1",       "1",  "0.5",     "1",     "1",        "1",     "2",     "2",   "0.5",    "1",      "3"],
@@ -87,19 +100,63 @@ class Move:
             else:
                 type2Point += 1
         
-        return typeChart[type2Point][type1Point]
+        return (int)(typeChart[type2Point][type1Point])
+    
+    def moveDamageCalculation(self, attackedEmoji: Emojimon):
+        """
+        The actual damage calculation functions!
+
+        Keyword arguments:
+            attackedEmoji (Emojimon) -- the attacked emoji whose defensive stats will be used
+
+        Returns:
+            the final damage value as an int
+        """
+        if self.moveAttackPower == 0:
+            return 0 #The move is a non damaging move and we can skip this step
+        
+        if self.moveAttackType == "Physical":
+            attackVal = (self.moveAttackPower + self.moveOwner.attack) * self.determineSameTypeAttackBonus()
+            curvedAttackVal = attackVal ** 1.2
+            
+            defenseVal = attackedEmoji.defense
+            curvedDefenseVal = defenseVal ** 0.5
+            
+            pretypeDamage = curvedAttackVal / curvedDefenseVal
+            
+            return max(pretypeDamage * self.determineTypeEffectivenessMultiplier(attackedEmoji))
+            
+        else:
+            attackVal = (self.moveAttackPower + self.moveOwner.sp_attack) * self.determineSameTypeAttackBonus()
+            curvedAttackVal = attackVal ** 1.2
+            
+            defenseVal = attackedEmoji.sp_defense
+            curvedDefenseVal = defenseVal ** 0.5
+            
+            pretypeDamage = curvedAttackVal / curvedDefenseVal
+            
+            return max(pretypeDamage * self.determineTypeEffectivenessMultiplier(attackedEmoji))
             
      
-"""  Test Code
+
 def main():
-    print(Move.typeEffectivesChart("Magic", "Dinosaur"))
+    em1 = Emojimon(True, 1)
+    em2 = Emojimon(True, 2)
+    moveTest = Move(-1, em1)
+    
+    print(em1.getEmojiType())
+    print(em2.getEmojiType())
+    print(moveTest.getMoveType())
+    
+    print(moveTest.determineTypeEffectivenessMultiplier(em2))
+    
     pass
        
     
 if __name__ == "__main__":
     main()
-    
-"""  
+
+
     
     
     
