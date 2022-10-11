@@ -1,6 +1,5 @@
 import json
 import random
-import copy
 from utils import Utils
 
 
@@ -55,7 +54,7 @@ class Emojimon:
 		Parameter:
 			random (bool): whether or not we want to generate this randomly. 
 				Needs to be here since Python does not allow for constructor overloading
-			data (str): a json object that will be converted back into an emojimon
+			id (int): if random is true, id will be used as the id of the generated emojimon, else, it will be used to query from the database
 		"""
 		if not id and not random:
 			raise ValueError(
@@ -64,8 +63,10 @@ class Emojimon:
 		if random:
 			self.random_gen()
 			self._id = id
-			self.evolve_to += 1
+			#TODO: randomizing evolution
 		else:
+			# TODO: Allow for querying id from database
+			self.fetch_emojimon(id)
 			pass
 
 	def fetch_emojimon(self, id: int):
@@ -77,10 +78,11 @@ class Emojimon:
 		pass
 
 	def random_gen(self):
-		element_types = ['earth', 'air', 'fire', 'nature', 'ice', 'water']
+		# TODO: dual-types?
+		types = ["Normal", "Robot", "Ninja", "Fire", "Water", "Dinosaur", "Earth", "Sound", "Wind", "Darkness", "Light", "Plasma", "Solar", "Lunar", "Meme", "Magic"]
 
 		# Randomize element type
-		self.el_type = random.choice(element_types)
+		self.el_type = random.choice(types)
 
 		# Emojimon Stat
 		self.hp = random.randint(1, 20)
@@ -152,6 +154,20 @@ class Emojimon:
 		Getter method for returning the id of the Emojimon object.
 		"""
 		return self._id
+
+	def get_info(self):
+		"""
+		Getter method for getting the information needed to apply to move effect scaling
+		"""
+		info_dict = {
+			"hp": self.hp,
+			"attack": self.attack,
+			"sp_attack": self.sp_attack,
+			"defense": self.defense,
+			"sp_defense": self.sp_defense,
+			"speed": self.speed,
+		}
+		return info_dict
 	
 	def convert_python(self, json_file):
 		"""
