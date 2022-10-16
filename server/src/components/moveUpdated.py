@@ -23,12 +23,21 @@ class Move:
     
     
     #Main definition function, makes use of the passed moveID to load correctly.
-    def __init__(self, passedMoveID, moveParent):
+    def __init__(self, passedMoveID, moveParent: Emojimon):
         #load move attributes from file
         if(passedMoveID == -1):
-            self.moveType = "Robot"
+            self.moveID = passedMoveID
+            self.moveName = "Randomly Generated Test Move"
+            self.moveType = "Normal"
+            self.moveAttackType = "Physical"
+            self.moveMaxPowerPoints = 420
+            self.moveSpeed = 1
             self.moveOwner = moveParent
-            self.moveAttackPower = 100
+            self.moveEffectString = "COCK AND BALLS!"
+            
+            self.moveCurrentPowerPoints = 69
+            self.moveAttackPower = 50
+            self.moveAccuracy = 50
         pass
     
     #A Simple Function that returns the name of the Move
@@ -112,6 +121,9 @@ class Move:
         Returns:
             the final damage value as an int
         """
+        #tick down power points
+        self.moveCurrentPowerPoints -= 1
+        
         if self.moveAttackPower == 0:
             return 0 #The move is a non damaging move and we can skip this step
         
@@ -136,6 +148,14 @@ class Move:
             pretypeDamage = curvedAttackVal / curvedDefenseVal
             
             return max(pretypeDamage * self.determineTypeEffectivenessMultiplier(attackedEmoji))
+    
+    
+    def canAct(self):
+        #returns true if the move has more than 0 power points, or uses left. False otherwise
+        if(self.moveCurrentPowerPoints < 1):
+            return False
+        else:
+            return True
             
      
 
