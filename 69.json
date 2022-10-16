@@ -1,0 +1,9 @@
+{
+  "_id": 69,
+  "attack": 6,
+  "defense": 6,
+  "special_attack": 3,
+  "special_defense": 2,
+  "speed": 4,
+  "hp": 3
+}

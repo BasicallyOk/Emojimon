@@ -1,4 +1,4 @@
-from emojimon import Emojimon
+from server.src.components.emojimon import Emojimon
 
 __author__ = "Connor Killingbeck" # Insert your name here if you're writing the initial code
 __maintainer__ = "" # Insert your name here if you're fixing bugs or make improvements
