@@ -55,6 +55,15 @@ def generate_Emoji(trainer_reference):
     pass
 
 def generate_move_list(passed_emoji: Emojimon):
+    """
+    Generates a move list of random moves
+
+    Args:
+        passed_emoji (Emojimon): the emojimon the list is going to belong to
+
+    Returns:
+        a list of moves
+    """
     moveList = []
     
     for x in range(10):
