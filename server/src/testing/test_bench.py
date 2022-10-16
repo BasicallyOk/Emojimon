@@ -5,7 +5,8 @@ This will allow the back-end and the front-end to be developed separately from o
 The test bench will NOT be subject to our CI pipeline. This is for human testing purposes to aid development only.
 """
 
-from components import emojimon, move
+from Emojimon.server.src.components.emojimon import Emojimon
+from components import emojimon, move, moveUpdated
 
 __author__ = "Khoa Nguyen" # Insert your name here if you're writing the initial code
 __maintainer__ = "Khoa Nguyen" # Insert your name here if you're fixing bugs or make improvements
@@ -40,6 +41,28 @@ def generate_trainers():
     2 Trainer objects
     """
     pass
+
+def generate_Emoji(trainer_reference):
+    """
+    Generates Random emoji
+
+    Args:
+        trainer_reference (_type_): the reference to the trainer that owns this emoji
+    
+    Return:
+        an Emojimon
+    """
+    pass
+
+def generate_move_list(passed_emoji: Emojimon):
+    moveList = []
+    
+    for x in range(10):
+        generated_move = moveUpdated(-1, passed_emoji)
+        moveList.append(generated_move)
+        
+    return moveList
+
 
 
 if __name__ == "__main__":
